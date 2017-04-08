@@ -124,7 +124,16 @@ class ViewController: UIViewController, UITextFieldDelegate {
                     }
                 }
             } else {
-                return false
+                if string == "-" {
+                    if (textField.text!.isEmpty == true) {
+                        return true
+                    }
+                    else {
+                        return false
+                    }
+                } else {
+                    return false
+                }
             }
         }
     }
