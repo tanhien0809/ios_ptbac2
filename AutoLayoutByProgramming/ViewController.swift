@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UITextFieldDelegate {
     
     
     @IBOutlet weak var lb_Notifi: UILabel!
@@ -26,6 +26,10 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view, typically from a nib.
         
         txt_Result.isEnabled = false
+        
+        txt_a.delegate = self
+        txt_b.delegate = self
+        txt_c.delegate = self
     }
 
     override func didReceiveMemoryWarning() {
@@ -43,24 +47,7 @@ class ViewController: UIViewController {
         
         
         if(a == 0) {
-            if(b == 0) {
-                if (c == 0) {
-                    lb_Notifi.text = "Phương trình vô số nghiệm"
-                    lb_Notifi.textColor = UIColor.green
-                } else {
-                    lb_Notifi.text = "Phương trình vô nghiệm."
-                    lb_Notifi.textColor = UIColor.red
-                }
-            } else {
-                lb_Notifi.text = "Phương trình có 1 nghiệm"
-                lb_Notifi.textColor = UIColor.blue
-                
-                if (c == 0) {
-                    txt_Result.text = "x = 0"
-                } else {
-                    txt_Result.text = "x = " + String(-c/b)
-                }
-            }
+            PTBac1(b: b, c: c)
         } else {
             if(b == 0 && c == 0) {
                 lb_Notifi.text = "Phương trình có 1 nghiệm"
@@ -69,6 +56,27 @@ class ViewController: UIViewController {
                 txt_Result.text = "x = 0"
             } else {
                 PTBac2(a: a, b: b, c: c)
+            }
+        }
+    }
+    
+    func PTBac1(b: Float, c: Float) {
+        if(b == 0) {
+            if (c == 0) {
+                lb_Notifi.text = "Phương trình vô số nghiệm"
+                lb_Notifi.textColor = UIColor.green
+            } else {
+                lb_Notifi.text = "Phương trình vô nghiệm."
+                lb_Notifi.textColor = UIColor.red
+            }
+        } else {
+            lb_Notifi.text = "Phương trình có 1 nghiệm"
+            lb_Notifi.textColor = UIColor.blue
+            
+            if (c == 0) {
+                txt_Result.text = "x = 0"
+            } else {
+                txt_Result.text = "x = " + String(-c/b)
             }
         }
     }
@@ -91,6 +99,33 @@ class ViewController: UIViewController {
             lb_Notifi.textColor = UIColor.blue
             
             txt_Result.text = "x1 = " + String((-b + sqrtf(lamda))/(2*a)) + "; x2 = " + String((-b - sqrtf(lamda))/(2*a))
+        }
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let inverseSet = NSCharacterSet(charactersIn:"0123456789").inverted
+        
+        let components = string.components(separatedBy: inverseSet)
+        
+        let filtered = components.joined(separator: "")
+        
+        if filtered == string {
+            return true
+        } else {
+            if string == "." {
+                let countdots = textField.text!.components(separatedBy:".").count - 1
+                if countdots == 0 {
+                    return true
+                } else{
+                    if countdots > 0 && string == "." {
+                        return false
+                    } else {
+                        return true
+                    }
+                }
+            } else {
+                return false
+            }
         }
     }
 }
